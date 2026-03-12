@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.api.infra.CheckConditionMapper">
+
+    <!--
+        comp_id + cond_attr_cd 별로 cond_attr_val 을 comma-join 하여 조회
+        readme.md 의 쿼리 결과와 동일한 구조
+    -->
+    <select id="findAllConditions" resultType="com.example.api.domain.CheckConditionComposite">
+        SELECT
+            comp_id      AS compId,
+            cond_attr_cd AS condAttrCd,
+            LISTAGG(cond_attr_val, ',') WITHIN GROUP (ORDER BY seq) AS condAttrVal
+        FROM check_condition_composite_dtl
+        GROUP BY comp_id, cond_attr_cd
+        ORDER BY comp_id, cond_attr_cd
+    </select>
+
+    <select id="findLogicsByCompId" parameterType="long" resultType="com.example.api.domain.CheckLogic">
+        SELECT
+            clp.logic_id     AS logicId,
+            clp.logic_desc   AS logicDesc,
+            clp.logic_class  AS logicClass,
+            clp.logic_methd  AS logicMethod
+        FROM check_condition_logic_metrix cclm
+        INNER JOIN check_logic_pool clp ON cclm.logic_id = clp.logic_id
+        WHERE cclm.comp_id = #{compId}
+        ORDER BY cclm.order_seq
+    </select>
+
+</mapper>

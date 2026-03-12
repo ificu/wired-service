@@ -1,0 +1,13 @@
+# Gradle
+.gradle/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# H2 DB files
+src/main/resources/db/*.mv.db
+src/main/resources/db/*.trace.db
+src/main/resources/db/*.lock.db

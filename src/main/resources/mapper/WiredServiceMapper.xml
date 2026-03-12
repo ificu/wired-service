@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.api.infra.WiredServiceMapper">
+
+    <resultMap id="wiredServiceResultMap" type="com.example.api.domain.WiredServiceQuery">
+        <id     property="id"            column="id"/>
+        <result property="serviceType"   column="svc_type"/>
+        <result property="serviceName"   column="svc_nm"/>
+        <result property="serviceNumber" column="svc_no"/>
+        <result property="customerId"    column="cust_id"/>
+        <result property="contractNumber" column="cntr_no"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="wiredServiceResultMap">
+        SELECT id, svc_type, svc_nm, svc_no, cust_id, cntr_no FROM wired_services
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="wiredServiceResultMap">
+        SELECT id, svc_type, svc_nm, svc_no, cust_id, cntr_no FROM wired_services WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.example.api.domain.WiredServiceQuery" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wired_services (svc_type, svc_nm, svc_no, cust_id, cntr_no)
+        VALUES (#{serviceType}, #{serviceName}, #{serviceNumber}, #{customerId}, #{contractNumber})
+    </insert>
+
+    <update id="update" parameterType="com.example.api.domain.WiredServiceQuery">
+        UPDATE wired_services
+        SET svc_type = #{serviceType}, svc_nm = #{serviceName},
+            svc_no = #{serviceNumber}, cust_id = #{customerId}, cntr_no = #{contractNumber}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM wired_services WHERE id = #{id}
+    </delete>
+
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT COUNT(1) > 0 FROM wired_services WHERE id = #{id}
+    </select>
+
+</mapper>
